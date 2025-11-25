@@ -1,0 +1,53 @@
+
+
+
+create database ecommerce;
+use  ecommerce;
+show databases;
+create table customers(
+id int auto_increment primary key,
+name varchar(100) not null,
+email varchar(100) unique,
+address varchar(250)
+);
+
+
+
+
+create table products(
+id int auto_increment primary key,
+name varchar(100) not null,
+price decimal(10,2),
+description text
+);
+
+		
+
+create table orders(
+id int auto_increment primary key,
+customer_id int,
+order_date date,
+totalAmount decimal(10,2),
+foreign key(customer_id) references customers(id)
+);
+
+
+
+insert into customers (name,email,address)values
+("john","john@gmail.com","2 vyasarpadi chennai"),
+("sara","sara@gmail.com","65 dowfton chennai"),
+("prema","prema@gmail.com","7 kavasthalam kanniyakumari");
+
+insert into products (name,price,description)values
+("ProductA","50.00","ProductA description"),
+("ProductB","40.00","ProductB description"),
+("Product","70.00","ProductC description");
+
+insert into orders(customer_id,order_date,totalAmount)values
+(1,curdate(),200.00),
+(2,curdate()-interval 5 day,300.00),
+(2,curdate()-interval 10 day,400.00),
+(3,curdate(),250.00),
+(1,curdate(),250.00),
+(3,curdate()-interval 15 day,400.00),
+(2,curdate()-interval 20 day,400.00);

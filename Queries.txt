@@ -1,0 +1,163 @@
+Question :- Retrieve all customers who have placed an order in the last 30 days.
+Answer   :- select distinct c.*
+            from customers c
+            join orders o on c.id=o.customer_id 
+            where o.order_date>=curdate()-interval 30 day;
+
+OutPut:-
+        1	john	john@gmail.com	2 vyasarpadi chennai
+        2	sara	sara@gmail.com	65 dowfton chennai
+        3	prema	prema@gmail.com	 7 kavasthalam kanniyakumari
+
+--------------------------------------------------------------------
+Question :- Get the total amount of all orders placed by each customer
+Answer   :- select c.name, sum(o.totalAmount)as total_Spend
+            from customers c 
+            join orders o on o.customer_id=c.id
+            group by c.id;
+
+OutPut:- john	450.00
+         sara	1100.00
+         prema	650.00
+-----------------------------------------------------------------------
+Question :- Update the price of Product C to 45.00.
+Answer   :- update products 
+            set price=45.00 
+            where id=3;
+
+OutPut:- 1	ProductA	50.00	ProductA description
+         2	ProductB	40.00	ProductB description
+         3	ProductC	45.00	ProductC description
+
+---------------------------------------------------------------------------         
+Question :- Add a new column discount to the products table.
+Answer   :-	alter table products add column discount decimal(5,2) default(0.00);
+
+OutPut:- 1	ProductA	50.00	ProductA description	0.00
+         2	ProductB	40.00	ProductB description	0.00
+         3	ProductC	45.00	ProductC description	0.00
+
+-----------------------------------------------------------------------------
+Question :- Retrieve the top 3 products with the highest price.
+Answer   :- select * from products order by price desc limit 3;
+
+OutPut:-  1	 ProductA	50.00	ProductA description	0.00
+          3  ProductC	45.00	ProductC description	0.00
+          2	 ProductB	40.00	ProductB description	0.00
+
+
+-------------------------------------------------------------------------------
+Question :- Retrieve the orders with a total amount greater than 150.00.
+
+Answer   :-	select * from orders where totalAmount>=150;
+
+OutPut:- 1	1	2025-11-22	200.00
+         2	2	2025-11-17	300.00
+         3	2	2025-11-12	400.00
+         4	3	2025-11-22	250.00
+         5	1	2025-11-22	250.00
+         6	3	2025-11-07	400.00
+         7	2	2025-11-02	400.00
+
+
+---------------------------------------------------------------------------------
+Question :- Retrieve the average total of all orders.
+
+Answer   :-	select avg(totalAmount)as averageAmount from orders;
+
+OutPut:- 	averageAmount
+	        314.285714
+
+--------------------------------------------------------------------------------------
+Question :- Join the orders and customers tables to retrieve the customer's name and order date for each order. 
+
+Answer   :- select c.name ,o.order_date
+            from customers c cross join orders o;
+
+
+OutPut:-   sanub	2025-11-22
+           sara	    2025-11-22
+           prema	2025-11-22
+           sara	    2025-11-22
+           john	    2025-11-22
+           sanub	2025-11-17
+           sara	    2025-11-17
+           prema	2025-11-17
+           sara	    2025-11-17
+           john	    2025-11-17
+           sanub	2025-11-12
+           sara	    2025-11-12
+           prema	2025-11-12
+           sara	    2025-11-12
+           john	    2025-11-12
+           sanub	2025-11-22
+           sara	    2025-11-22
+           prema	2025-11-22
+           sara	    2025-11-22
+           john	    2025-11-22
+           sanub	2025-11-22
+           sara	    2025-11-22
+           prema	2025-11-22
+           sara	    2025-11-22
+           john	    2025-11-22
+           sanub	2025-11-07
+           sara	    2025-11-07
+           prema	2025-11-07
+           sara	    2025-11-07
+           john	    2025-11-07
+           sanub	2025-11-02
+           sara	    2025-11-02
+           prema	2025-11-02
+           sara	    2025-11-02
+           john	    2025-11-02
+
+----------------------------------------------------------------------------------
+
+Question :- Normalize the database by creating a separate table for order items 
+
+            and updating the orders table to reference the order_items table.
+
+Answer   :- create table order_items(
+            id int auto_increment primary key,
+            order_id int,
+            product_id int,
+            quantity int,
+            foreign key(order_id)references orders(id),
+            foreign key(product_id)references products(id)
+            );
+            
+
+
+            insert into order_items(order_id,product_id,quantity)values
+                 (1,2,2),
+                  (2,3,4),
+                  (3,1,2),
+                   (4,2,4),
+                     (5,1,5),
+                      (6,2,6);
+        
+
+
+OutPut:-       1	1	2	2
+               2	1	2	2
+               3	2	3	4
+               4	3	1	2
+               5	4	2	4
+               6	5	1	5
+               7	6	2	6
+			
+               
+			
+
+--------------------------------------------------------------------------------------
+Question :-  Get the names of customers who have ordered Product A.
+Answer   :- select c. name from customers c
+            join orders o on c.id=o.customer_id
+            join order_items oi on o.id=oi.order_id
+            join products p on oi.product_id=p.id
+            where p.name="Product A";
+
+OutPut:-   sara
+           john
+
+------------------------------------------------------------------------------------------
